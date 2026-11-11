@@ -1,0 +1,1613 @@
+"""
+FABBIES - Premium Animated Restaurant Menu Website
+Framework: Streamlit
+Author: Senior UI/UX & Full-Stack Developer
+"""
+
+import streamlit as st
+import streamlit.components.v1 as components
+
+# 1. PAGE CONFIGURATION
+st.set_page_config(
+    page_title="FABBIES | Food Is My Best Friend",
+    page_icon="🍕",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+)
+
+# 2. COMPLETE CENTRALIZED MENU DATA
+# Extracted directly from official Fabbies menu reference prints
+MENU_DATA = {
+    "brand": {
+        "name": "FABBIES",
+        "tagline": "FOOD IS MY BEST FRIEND",
+        "subtitle": "Taste the Happiness",
+        "description": "At Fabbies, excellence isn't just a goal — it's a way of life. From our meticulously prepared dishes to our spotless dining atmosphere, we strive for perfection in every bite.",
+        "phone": "+92 300 1234567",
+        "whatsapp": "923001234567",
+        "location": "Main Boulevard, Commercial Hub, Pakistan",
+        "hours": "Mon - Sun: 12:00 PM - 02:00 AM",
+        "facebook_url": "https://facebook.com/fabbiespizza",
+        "instagram_url": "https://instagram.com/fabbiespizza",
+    },
+    "pizzas": {
+        "deep_dish": [
+            {
+                "name": "Peri Peri Deep Dish",
+                "desc": "Thick golden buttery crust packed with spiced peri peri chicken, molten cheese blend, and signature peri drizzle.",
+                "prices": {"Medium": "1,449", "Large": "1,949"},
+                "badge": "Signature",
+                "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "BBQ Texas Deep Dish",
+                "desc": "Slow-smoked Texas style BBQ chicken chunks with smoky glaze, double mozzarella, and herbs in deep dish pan.",
+                "prices": {"Medium": "1,449", "Large": "1,949"},
+                "badge": "Bestseller",
+                "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "Garlic Butter Deep Dish",
+                "desc": "Infused rich garlic herb butter dough topped with aromatic shredded chicken, garlic emulsion, and aged cheese.",
+                "prices": {"Medium": "1,449", "Large": "1,949"},
+                "badge": "Chef Special",
+                "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=80",
+            },
+        ],
+        "extreme": [
+            {
+                "name": "Mild Extreme",
+                "desc": "Loaded with gentle zesty spices, bell peppers, golden corn, and tender chicken chunks over savory marinara.",
+                "prices": {'10" Medium': "1,349", '13" Large': "1,749"},
+                "badge": "Mild & Cheesy",
+                "image": "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "Classic Extreme",
+                "desc": "The ultimate party pizza packed with chicken pepperoni, diced capsicum, black olives, onions, and spicy red sauce.",
+                "prices": {'10" Medium': "1,349", '13" Large': "1,749"},
+                "badge": "Extreme Flavor",
+                "image": "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=800&q=80",
+            },
+        ],
+        "crown_crust": [
+            {
+                "name": "Royal Crown Crust Pizza",
+                "desc": "Hand-pinched crown crust stuffed with melted cream cheese & kebab pockets, topped with chicken fajita and black olives.",
+                "prices": {'10" Medium': "1,249", '13" Large': "1,599"},
+                "badge": "Crown Special",
+                "image": "https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=800&q=80",
+            }
+        ],
+        "stuffed_crust": [
+            {
+                "name": "Kabab Crust Pizza",
+                "desc": "Savory baked shami/seekh kabab roll ringed entirely inside the outer crust for pure indulgence in every bite.",
+                "prices": {"Standard": "575"},
+                "badge": "Traditional Fusion",
+                "image": "https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "Cheese Stuffed Crust",
+                "desc": "Crust edge bursting with pure melted mozzarella strings and seasoned garlic herb dusting.",
+                "prices": {'Medium 10"': "1,075"},
+                "badge": "Extra Cheese",
+                "image": "https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "Mild Stuffed Crust",
+                "desc": "Mild spiced cream cheese blend stuffed rim with juicy chicken supreme toppings.",
+                "prices": {'Large 13"': "1,499"},
+                "badge": "Grand Feast",
+                "image": "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?auto=format&fit=crop&w=800&q=80",
+            },
+        ],
+    },
+    "appetizers": [
+        {
+            "name": "Fried Tender Strips",
+            "desc": "Hand-breaded golden crispy chicken breast tenders served piping hot with secret garlic mayo dip.",
+            "serving": "5 Pcs",
+            "price": "480",
+            "image": "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Artisan Garlic Bread",
+            "desc": "Freshly toasted baguette slices brushed with garlic parsley butter and melted parmesan.",
+            "serving": "5 Pcs / 10 Pcs",
+            "price": "250 / 450",
+            "image": "https://images.unsplash.com/photo-1619860860774-1e2e17343432?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Oven Baked Wings",
+            "desc": "Juicy oven-roasted wings marinated in secret spices, finished to a tender and smokey perfection.",
+            "serving": "6 Pcs",
+            "price": "349",
+            "image": "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Crispy BBQ Wings",
+            "desc": "Golden fried wings tossed liberally in sweet and smoky Texas hickory barbecue sauce.",
+            "serving": "6 Pcs",
+            "price": "380",
+            "image": "https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Golden Nuggets",
+            "desc": "Crispy crumb-coated minced chicken bites seasoned lightly with white pepper and celery salt.",
+            "serving": "5 Pcs / 10 Pcs",
+            "price": "300 / 550",
+            "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Classic French Fries",
+            "desc": "Golden straight-cut Idaho potatoes tossed with sea salt, crisp on outside and fluffy inside.",
+            "serving": "Only Fries",
+            "price": "199",
+            "image": "https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Fully Loaded Fries",
+            "desc": "Heaped fries drenched with warm melted cheese, jalapeños, crispy chicken chunks & chipotle mayo.",
+            "serving": "Platter Size",
+            "price": "649",
+            "image": "https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=800&q=80",
+        },
+    ],
+    "burgers": {
+        "fried": [
+            {
+                "name": "Zinger Chipotle",
+                "desc": "Extra crispy whole muscle chicken fillet topped with smokey chipotle sauce, lettuce, and pickles.",
+                "price": "399",
+                "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "Classic Chicken Patty",
+                "desc": "Savory seasoned minced chicken patty grilled soft with cream mayonnaise and crunchy iceberg.",
+                "price": "249",
+                "image": "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "Signature Zinger Burger",
+                "desc": "The town's favorite spicy fried fillet coated in crunchy batter, crowned with chilled lettuce.",
+                "price": "349",
+                "image": "https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "Crunch Burger",
+                "desc": "Double crisp crumbed fillet with tangy dressing, melted cheese slice, and sweet toasted bun.",
+                "price": "299",
+                "image": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "Colossal Tower Burger",
+                "desc": "Twin towering zinger fillets stacked high with golden hashbrown, double cheese, and zesty sauce.",
+                "price": "499",
+                "image": "https://images.unsplash.com/photo-1582196016295-f8c8bd4b3e99?auto=format&fit=crop&w=800&q=80",
+            },
+        ],
+        "grilled": [
+            {
+                "name": "Grilled Beef Patty",
+                "desc": "Flame-seared 100% prime ground beef patty topped with smoked caramelized onions, cheddar, and BBQ glaze.",
+                "price": "649",
+                "image": "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "Chicken Spark Jalapeno",
+                "desc": "Char-grilled spicy breast fillet smothered in fiery jalapeño rings, melted Monterey jack, and chili mayo.",
+                "price": "499",
+                "image": "https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "Flamin Cheeto's Fillet",
+                "desc": "Crispy chicken breast crust rolled in crushed flaming red Cheetos with warm cheese volcanic drip.",
+                "price": "499",
+                "image": "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?auto=format&fit=crop&w=800&q=80",
+            },
+        ],
+    },
+    "wraps_and_sandwiches": {
+        "wraps": {
+            "title": "Crispy Tortilla Wraps",
+            "flavors": ["Chipotle", "Jalapeno", "Garlic", "Honey Mustard", "Peri Peri"],
+            "base_price": "549",
+            "addons": [
+                {"name": "Black Olives", "price": "60"},
+                {"name": "Extra Melted Cheese", "price": "60"},
+                {"name": "Pickled Jalapenos", "price": "60"},
+                {"name": "Sautéed Mushrooms", "price": "60"},
+            ],
+            "desc": "Crispy shredded chicken folded inside a warm toasted flour tortilla with fresh garden greens and choice of handcrafted sauce.",
+            "image": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+        },
+        "sandwiches": [
+            {
+                "name": "Grand Club Sandwich",
+                "desc": "Triple-decker toasted bread filled with chicken spread, fried egg, cucumber, tomato slice, and cheese.",
+                "price": "540",
+                "sides": "Served with Golden Fries & Fresh Coleslaw",
+                "image": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "Cocktail Sandwich",
+                "desc": "Zesty shredded chicken dressed in secret cocktail sauce, stacked neatly with crisp greens.",
+                "price": "540",
+                "sides": "Served with Golden Fries & Fresh Coleslaw",
+                "image": "https://images.unsplash.com/photo-1554433607-66b5efe9d304?auto=format&fit=crop&w=800&q=80",
+            },
+            {
+                "name": "BBQ Grilled Sandwich",
+                "desc": "Grilled chicken strips glazed with sweet and spicy hickory sauce, grilled pressed between buttered slices.",
+                "price": "540",
+                "sides": "Served with Golden Fries & Fresh Coleslaw",
+                "image": "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
+            },
+        ],
+    },
+    "pastas": [
+        {
+            "name": "Classic Al-Fredo Pasta",
+            "desc": "Fettuccine pasta enrobed in rich parmesan garlic cream sauce, grilled chicken strips, black olives, and melted mozzarella crust.",
+            "price": "749",
+            "badge": "Creamy Rich",
+            "image": "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Flaming Pasta",
+            "desc": "Fiery penne pasta simmered in spicy arrabbiata tomato emulsion with crushed red chilies, herbs, and tender chicken.",
+            "price": "599",
+            "badge": "Hot & Spicy",
+            "image": "https://images.unsplash.com/photo-1621996346565-e3d5d6281724?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Tong Twister Pasta",
+            "desc": "Our signature tangy-savory fusion pasta baked in clay dish under a blanket of browned golden cheese.",
+            "price": "749",
+            "badge": "House Favorite",
+            "image": "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=800&q=80",
+        },
+    ],
+    "fried_chicken": [
+        {
+            "name": "Crispy Whole Chicken (8 Pcs)",
+            "desc": "Full 8-piece chicken marinated overnight in proprietary spices, pressure fried for ultimate crunch and juiciness.",
+            "price": "1,499",
+            "serving": "8 Pieces Bucket",
+            "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Crispy Drum Stick",
+            "desc": "Plump and juicy single chicken drumstick with thick, crispy textured outer coating.",
+            "price": "249",
+            "serving": "1 Piece",
+            "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Crispy Thai Piece",
+            "desc": "Succulent bone-in chicken thigh with delicate golden flaky crust and tender meat.",
+            "price": "299",
+            "serving": "1 Piece",
+            "image": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Crispy Hot Wings",
+            "desc": "Deep golden crunchy chicken wings sprinkled with signature spicy dusting.",
+            "price": "399",
+            "serving": "6 Pieces",
+            "image": "https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Crispy Hot Shots",
+            "desc": "Bite-sized pops of 100% boneless tender chicken breast, fried to an irresistible golden crisp.",
+            "price": "499",
+            "serving": "10 Pieces Box",
+            "image": "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=800&q=80",
+        },
+    ],
+    "platters": [
+        {
+            "name": "Behari Platter",
+            "desc": "4 Pieces of cheese-stuffed Behari Rolls + 6 Pieces of tender Baked Wings + Crispy Fries + Signature Garlic Dip Sauce.",
+            "price": "749",
+            "includes": "4 Behari Rolls • 6 Baked Wings • Crispy Fries • Dip Sauce",
+            "badge": "Best Value Combo",
+            "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+        },
+        {
+            "name": "Sandwich Platter",
+            "desc": "1 Grand Club or Grilled Sandwich + 4 Pieces Golden Crispy Wings + Fresh Coleslaw + Heaped Seasoned Fries.",
+            "price": "699",
+            "includes": "1 Full Sandwich • 4 Crispy Wings • 1 Fries • 1 Coleslaw",
+            "badge": "Hunger Buster",
+            "image": "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
+        },
+    ],
+    "behari_rolls": {
+        "name": "Signature Behari Rolls",
+        "desc": "Marinated Behari chicken seasoned with charred spices, tender onions, melted cheese, wrapped carefully in warm flaky pita tortilla bread, baked to perfection and served with house dipping sauce.",
+        "serving": "4 Pieces Box",
+        "price": "499",
+        "badge": "Customer Obsession",
+        "image": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+    },
+}
+
+# 3. EMBEDDED COMPLETE STYLES & INTERACTION SYSTEM
+STYLES_AND_SCRIPTS = """
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* CSS RESET FOR STREAMLIT */
+#MainMenu, header, footer, .stDeployButton {
+    visibility: hidden !important;
+    display: none !important;
+}
+
+div.block-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+}
+
+html {
+    scroll-behavior: smooth;
+    background-color: #0d0d0d;
+}
+
+body {
+    background-color: #0d0d0d;
+    color: #f0f0f0;
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* BRAND PALETTE */
+:root {
+    --bg-main: #0c0d0e;
+    --bg-card: #151619;
+    --bg-card-hover: #1c1e23;
+    --gold: #F5C518;
+    --gold-glow: rgba(245, 197, 24, 0.35);
+    --gold-dim: #cca010;
+    --red-accent: #E63932;
+    --text-white: #FFFFFF;
+    --text-muted: #A3A3A3;
+    --border-gold: rgba(245, 197, 24, 0.22);
+}
+
+/* FLOATING PARTICLES BACKGROUND */
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(circle at 50% 20%, rgba(245, 197, 24, 0.05) 0%, transparent 60%);
+}
+
+/* ========================================================
+   HERO / SCREEN 1 - FULLSCREEN BRAND INTRODUCTION
+   ======================================================== */
+.hero-wrapper {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 50%, #1c1d22 0%, #0a0b0c 100%);
+    overflow: hidden;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+}
+
+.hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(245, 197, 24, 0.15) 0%, transparent 70%);
+    filter: blur(50px);
+    z-index: 1;
+    animation: pulseGlow 6s infinite ease-in-out alternate;
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(0.9); opacity: 0.5; }
+    100% { transform: scale(1.15); opacity: 0.85; }
+}
+
+/* FLOATING FOOD VISUALS IN HERO SIDES */
+.floating-food {
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 25px var(--gold-glow);
+    border: 2px solid var(--border-gold);
+    object-fit: cover;
+    z-index: 2;
+    pointer-events: none;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.7));
+}
+
+.float-1 {
+    width: 170px;
+    height: 170px;
+    top: 10%;
+    left: 4%;
+    animation: floatAnim1 7s ease-in-out infinite;
+}
+
+.float-2 {
+    width: 200px;
+    height: 200px;
+    bottom: 12%;
+    left: 6%;
+    animation: floatAnim2 8s ease-in-out infinite;
+}
+
+.float-3 {
+    width: 180px;
+    height: 180px;
+    top: 12%;
+    right: 5%;
+    animation: floatAnim2 9s ease-in-out infinite;
+}
+
+.float-4 {
+    width: 210px;
+    height: 210px;
+    bottom: 10%;
+    right: 5%;
+    animation: floatAnim1 7.5s ease-in-out infinite;
+}
+
+@keyframes floatAnim1 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(4deg); }
+}
+
+@keyframes floatAnim2 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(22px) rotate(-4deg); }
+}
+
+/* BRAND BADGE & LOGO */
+.hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.brand-emblem {
+    display: inline-block;
+    padding: 0.6rem 2.2rem;
+    border-radius: 50px;
+    background: rgba(245, 197, 24, 0.12);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 20px rgba(245, 197, 24, 0.2);
+}
+
+.brand-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(3.2rem, 9vw, 6.8rem);
+    font-weight: 900;
+    letter-spacing: 4px;
+    margin: 0;
+    line-height: 1;
+    background: linear-gradient(135deg, #FFFFFF 20%, #F5C518 70%, #d49a0a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+
+.brand-tagline {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1.1rem, 2.8vw, 1.9rem);
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin: 1.2rem 0 0.5rem 0;
+}
+
+.brand-tagline span {
+    color: var(--gold);
+}
+
+.brand-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.2vw, 1.4rem);
+    color: var(--gold);
+    margin-bottom: 2rem;
+    letter-spacing: 1px;
+}
+
+.brand-bio {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    max-width: 620px;
+    margin: 0 auto 2.5rem auto;
+    line-height: 1.7;
+}
+
+/* SCROLL PROMPT */
+.scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--gold);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-top: 1rem;
+    transition: all 0.3s;
+}
+
+.scroll-indicator:hover {
+    color: #fff;
+}
+
+.mouse-icon {
+    width: 24px;
+    height: 38px;
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    position: relative;
+    box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.mouse-wheel {
+    width: 4px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 2px;
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scrollWheel 2s infinite ease-in-out;
+}
+
+@keyframes scrollWheel {
+    0% { transform: translate(-50%, 0); opacity: 1; }
+    80% { transform: translate(-50%, 14px); opacity: 0; }
+    100% { transform: translate(-50%, 0); opacity: 0; }
+}
+
+/* ========================================================
+   STICKY SPEED NAVIGATION
+   ======================================================== */
+.sticky-nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(12, 13, 14, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-gold);
+    padding: 0.8rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 0.6rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+.nav-pill {
+    padding: 0.5rem 1.1rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: #ddd;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-pill i {
+    color: var(--gold);
+    font-size: 0.75rem;
+}
+
+.nav-pill:hover {
+    color: #000;
+    background: var(--gold);
+    border-color: var(--gold);
+    box-shadow: 0 0 15px var(--gold-glow);
+    transform: translateY(-2px);
+}
+
+.nav-pill:hover i {
+    color: #000;
+}
+
+/* ========================================================
+   MENU CONTENT SECTIONS
+   ======================================================== */
+.menu-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem 1.5rem;
+    position: relative;
+    z-index: 10;
+}
+
+.category-section {
+    margin-bottom: 6rem;
+    scroll-margin-top: 5.5rem;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.section-tag {
+    display: inline-block;
+    color: var(--gold);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+}
+
+.section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+.section-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 0.8rem;
+}
+
+.divider-line {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.divider-line.right {
+    background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.section-divider i {
+    color: var(--gold);
+    font-size: 0.9rem;
+}
+
+/* CARDS GRIDS */
+.food-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.8rem;
+}
+
+.food-grid-wide {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 2rem;
+}
+
+/* FOOD CARD STYLES */
+.food-card {
+    background: var(--bg-card);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+    position: relative;
+}
+
+.food-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--gold);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.65), 0 0 20px rgba(245, 197, 24, 0.2);
+    background: var(--bg-card-hover);
+}
+
+.card-img-wrapper {
+    position: relative;
+    width: 100%;
+    height: 210px;
+    overflow: hidden;
+    background-color: #202226;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.food-card:hover .card-img-wrapper img {
+    transform: scale(1.08);
+}
+
+.card-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: linear-gradient(135deg, var(--red-accent), #c21b14);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0.35rem 0.85rem;
+    border-radius: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    z-index: 2;
+}
+
+.card-badge.gold {
+    background: linear-gradient(135deg, var(--gold), #ca9b00);
+    color: #101010;
+}
+
+.card-body {
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-serving {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+}
+
+.card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.6rem 0;
+    letter-spacing: 0.5px;
+}
+
+.card-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0 0 1.2rem 0;
+    flex-grow: 1;
+}
+
+/* PRICE TAGS */
+.prices-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.9rem;
+    border-top: 1px dashed rgba(255, 255, 255, 0.12);
+    margin-top: auto;
+}
+
+.price-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-label {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.price-amount {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+}
+
+.currency-sym {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-right: 2px;
+}
+
+/* SUB-CATEGORIES SECTION HEADERS */
+.sub-category-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 2.2rem 0 1.2rem 0;
+    padding-left: 0.4rem;
+    border-left: 3px solid var(--gold);
+}
+
+/* SPECIAL WRAP & BEHARI BANNER CARDS */
+.feature-banner-card {
+    background: linear-gradient(135deg, #18191d 0%, #101114 100%);
+    border: 1px solid var(--border-gold);
+    border-radius: 22px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+    margin-bottom: 2rem;
+}
+
+.feature-banner-content {
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.feature-banner-image {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    object-fit: cover;
+}
+
+.addon-pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 1.2rem 0;
+}
+
+.addon-pill {
+    background: rgba(245, 197, 24, 0.08);
+    border: 1px solid rgba(245, 197, 24, 0.3);
+    border-radius: 8px;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #e5e5e5;
+}
+
+.addon-pill strong {
+    color: var(--gold);
+}
+
+/* PLATTERS SPECIAL CARD */
+.platter-card {
+    background: #141518;
+    border: 1px solid rgba(245, 197, 24, 0.3);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s ease;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+.platter-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-6px);
+    box-shadow: 0 25px 45px rgba(0,0,0,0.7), 0 0 25px rgba(245, 197, 24, 0.25);
+}
+
+.platter-specs {
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.82rem;
+    color: var(--gold);
+    font-weight: 700;
+    margin: 0.8rem 0;
+    border: 1px dashed rgba(245, 197, 24, 0.25);
+}
+
+/* FLOATING TOP BUTTON & QUICK ACTION BUTTON */
+.floating-action-group {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 9999;
+}
+
+.fab-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.25rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fab-btn.whatsapp {
+    background: #25D366;
+}
+
+.fab-btn.scrolltop {
+    background: var(--gold);
+    color: #101010;
+}
+
+.fab-btn:hover {
+    transform: scale(1.15) translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.8);
+}
+
+/* ========================================================
+   FOOTER SECTION
+   ======================================================== */
+.fabbies-footer {
+    background: #080809;
+    border-top: 1px solid rgba(245, 197, 24, 0.25);
+    padding: 4.5rem 1.5rem 2rem 1.5rem;
+    position: relative;
+    z-index: 10;
+}
+
+.footer-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 3rem;
+}
+
+.footer-col h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    color: #fff;
+    margin: 0 0 1.2rem 0;
+    letter-spacing: 1px;
+}
+
+.footer-col p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    margin: 0 0 0.8rem 0;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 12px;
+    margin-top: 1.2rem;
+}
+
+.social-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #17181c;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.social-circle:hover {
+    background: var(--gold);
+    color: #101010;
+    border-color: var(--gold);
+    transform: translateY(-4px);
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 3.5rem auto 0 auto;
+    padding-top: 1.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+    color: #777;
+    font-size: 0.8rem;
+}
+
+/* ========================================================
+   RESPONSIVE DESIGN (MOBILE & TABLET OPTIMIZATIONS)
+   ======================================================== */
+@media (max-width: 900px) {
+    .floating-food {
+        display: none !important;
+    }
+    .feature-banner-card {
+        grid-template-columns: 1fr;
+    }
+    .feature-banner-image {
+        min-height: 220px;
+    }
+    .feature-banner-content {
+        padding: 1.6rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .food-grid, .food-grid-wide {
+        grid-template-columns: 1fr;
+    }
+    .sticky-nav-bar {
+        justify-content: flex-start;
+        padding: 0.6rem 0.8rem;
+    }
+    .nav-pill {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.72rem;
+    }
+    .menu-container {
+        padding: 2rem 1rem 5rem 1rem;
+    }
+}
+</style>
+"""
+
+# Inject CSS and Head tags
+st.markdown(STYLES_AND_SCRIPTS, unsafe_allow_html=True)
+
+
+# 4. HELPER BUILDER FUNCTIONS
+def render_price_box(label: str, amount: str) -> str:
+    return f"""
+    <div class="price-box">
+        <span class="price-label">{label}</span>
+        <span class="price-amount"><span class="currency-sym">Rs.</span>{amount}</span>
+    </div>
+    """
+
+
+def render_pizza_card(pizza: dict) -> str:
+    prices_html = "".join(
+        [render_price_box(size, price) for size, price in pizza["prices"].items()]
+    )
+    badge_html = (
+        f'<span class="card-badge gold">{pizza["badge"]}</span>'
+        if "badge" in pizza
+        else ""
+    )
+    return f"""
+    <div class="food-card">
+        <div class="card-img-wrapper">
+            {badge_html}
+            <img src="{pizza['image']}" alt="{pizza['name']}" loading="lazy">
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">{pizza['name']}</h3>
+            <p class="card-desc">{pizza['desc']}</p>
+            <div class="prices-container">
+                {prices_html}
+            </div>
+        </div>
+    </div>
+    """
+
+
+def render_general_card(item: dict, is_gold_badge: bool = False) -> str:
+    badge_class = "gold" if is_gold_badge else ""
+    badge_html = (
+        f'<span class="card-badge {badge_class}">{item["badge"]}</span>'
+        if "badge" in item
+        else ""
+    )
+    serving_html = (
+        f'<div class="card-serving">{item["serving"]}</div>'
+        if "serving" in item
+        else ""
+    )
+    return f"""
+    <div class="food-card">
+        <div class="card-img-wrapper">
+            {badge_html}
+            <img src="{item['image']}" alt="{item['name']}" loading="lazy">
+        </div>
+        <div class="card-body">
+            {serving_html}
+            <h3 class="card-title">{item['name']}</h3>
+            <p class="card-desc">{item['desc']}</p>
+            <div class="prices-container">
+                {render_price_box("Price", item['price'])}
+            </div>
+        </div>
+    </div>
+    """
+
+
+# 5. HTML GENERATION FOR THE FULL EXPERIENCE
+b = MENU_DATA["brand"]
+
+# SECTION 1: HERO VIEWPORT (BRAND INTRODUCTION ONLY)
+hero_html = f"""
+<div class="particles-container"></div>
+
+<section class="hero-wrapper" id="brand-home">
+    <div class="hero-glow"></div>
+    
+    <!-- Floating visual food appetizers & entrees around the screen -->
+    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80" class="floating-food float-1" alt="Pizza">
+    <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80" class="floating-food float-2" alt="Burger">
+    <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80" class="floating-food float-3" alt="Fried Chicken">
+    <img src="https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=400&q=80" class="floating-food float-4" alt="Loaded Fries">
+
+    <div class="hero-content">
+        <div class="brand-emblem">Original Gourmet Craft</div>
+        <h1 class="brand-title">{b['name']}</h1>
+        <div class="brand-tagline">“ {b['tagline']} ”</div>
+        <div class="brand-subtitle">{b['subtitle']}</div>
+        <p class="brand-bio">{b['description']}</p>
+        
+        <a href="#menu-nav-start" class="scroll-indicator">
+            <span>SCROLL TO EXPLORE</span>
+            <div class="mouse-icon">
+                <div class="mouse-wheel"></div>
+            </div>
+            <i class="fa-solid fa-chevron-down" style="font-size:0.75rem; animation: bounce 1.8s infinite;"></i>
+        </a>
+    </div>
+</section>
+"""
+
+# SECTION 2: STICKY QUICK-NAV BAR
+nav_bar_html = """
+<div class="sticky-nav-bar" id="menu-nav-start">
+    <a href="#pizzas" class="nav-pill"><i class="fa-solid fa-pizza-slice"></i> Pizzas</a>
+    <a href="#appetizers" class="nav-pill"><i class="fa-solid fa-cookie-bite"></i> Appetizers</a>
+    <a href="#burgers" class="nav-pill"><i class="fa-solid fa-burger"></i> Burgers</a>
+    <a href="#wraps-sandwiches" class="nav-pill"><i class="fa-solid fa-bread-slice"></i> Wraps & Sandwiches</a>
+    <a href="#pastas" class="nav-pill"><i class="fa-solid fa-bowl-food"></i> Pastas</a>
+    <a href="#fried-chicken" class="nav-pill"><i class="fa-solid fa-drumstick-bite"></i> Fried Chicken</a>
+    <a href="#platters" class="nav-pill"><i class="fa-solid fa-utensils"></i> Platters</a>
+    <a href="#behari-rolls" class="nav-pill"><i class="fa-solid fa-fire"></i> Behari Rolls</a>
+</div>
+"""
+
+# SECTION 3: MENU CATEGORIES
+# 3.1 Pizzas Section
+deep_dish_cards = "".join(
+    [render_pizza_card(p) for p in MENU_DATA["pizzas"]["deep_dish"]]
+)
+extreme_cards = "".join(
+    [render_pizza_card(p) for p in MENU_DATA["pizzas"]["extreme"]]
+)
+crown_cards = "".join(
+    [render_pizza_card(p) for p in MENU_DATA["pizzas"]["crown_crust"]]
+)
+stuffed_cards = "".join(
+    [render_pizza_card(p) for p in MENU_DATA["pizzas"]["stuffed_crust"]]
+)
+
+pizza_section_html = f"""
+<div class="category-section" id="pizzas">
+    <div class="section-header">
+        <span class="section-tag">Stone Baked & Pan Perfection</span>
+        <h2 class="section-title">The Legendary Pizzas</h2>
+        <div class="section-divider">
+            <span class="divider-line"></span>
+            <i class="fa-solid fa-pizza-slice"></i>
+            <span class="divider-line right"></span>
+        </div>
+    </div>
+    
+    <div class="sub-category-title"><i class="fa-solid fa-circle-dot" style="color:var(--gold); font-size:0.7rem;"></i> Deep Dish Specials</div>
+    <div class="food-grid">
+        {deep_dish_cards}
+    </div>
+
+    <div class="sub-category-title"><i class="fa-solid fa-circle-dot" style="color:var(--gold); font-size:0.7rem;"></i> Extreme Pizzas</div>
+    <div class="food-grid">
+        {extreme_cards}
+    </div>
+
+    <div class="sub-category-title"><i class="fa-solid fa-circle-dot" style="color:var(--gold); font-size:0.7rem;"></i> Crown Crust Masterpieces</div>
+    <div class="food-grid">
+        {crown_cards}
+    </div>
+
+    <div class="sub-category-title"><i class="fa-solid fa-circle-dot" style="color:var(--gold); font-size:0.7rem;"></i> Stuffed Crust Series</div>
+    <div class="food-grid">
+        {stuffed_cards}
+    </div>
+</div>
+"""
+
+# 3.2 Appetizers Section
+appetizers_cards = "".join(
+    [render_general_card(item) for item in MENU_DATA["appetizers"]]
+)
+appetizers_section_html = f"""
+<div class="category-section" id="appetizers">
+    <div class="section-header">
+        <span class="section-tag">Get Munchin Before The Main Course</span>
+        <h2 class="section-title">Appetizers & Starters</h2>
+        <div class="section-divider">
+            <span class="divider-line"></span>
+            <i class="fa-solid fa-cookie-bite"></i>
+            <span class="divider-line right"></span>
+        </div>
+    </div>
+    
+    <div class="food-grid">
+        {appetizers_cards}
+    </div>
+</div>
+"""
+
+# 3.3 Burgers Section
+fried_burgers_cards = "".join(
+    [render_general_card(b) for b in MENU_DATA["burgers"]["fried"]]
+)
+grilled_burgers_cards = "".join(
+    [
+        render_general_card(b, is_gold_badge=True)
+        for b in MENU_DATA["burgers"]["grilled"]
+    ]
+)
+
+burgers_section_html = f"""
+<div class="category-section" id="burgers">
+    <div class="section-header">
+        <span class="section-tag">Pure Crunch & Char-Grilled Bliss</span>
+        <h2 class="section-title">Gourmet Burgers</h2>
+        <div class="section-divider">
+            <span class="divider-line"></span>
+            <i class="fa-solid fa-burger"></i>
+            <span class="divider-line right"></span>
+        </div>
+    </div>
+    
+    <div class="sub-category-title"><i class="fa-solid fa-drumstick-bite" style="color:var(--gold); font-size:0.7rem;"></i> Golden Fried Burgers</div>
+    <div class="food-grid">
+        {fried_burgers_cards}
+    </div>
+
+    <div class="sub-category-title"><i class="fa-solid fa-fire" style="color:var(--red-accent); font-size:0.7rem;"></i> Char-Grilled & Fiery Fillets</div>
+    <div class="food-grid">
+        {grilled_burgers_cards}
+    </div>
+</div>
+"""
+
+# 3.4 Wraps & Sandwiches Section
+wrap_data = MENU_DATA["wraps_and_sandwiches"]["wraps"]
+addons_html = "".join(
+    [
+        f'<div class="addon-pill">{addon["name"]}: <strong>+Rs.{addon["price"]}</strong></div>'
+        for addon in wrap_data["addons"]
+    ]
+)
+flavors_str = " • ".join(wrap_data["flavors"])
+
+sandwiches_cards = "".join(
+    [
+        f"""
+    <div class="food-card">
+        <div class="card-img-wrapper">
+            <span class="card-badge gold">Includes Sides</span>
+            <img src="{s['image']}" alt="{s['name']}" loading="lazy">
+        </div>
+        <div class="card-body">
+            <div class="card-serving">{s['sides']}</div>
+            <h3 class="card-title">{s['name']}</h3>
+            <p class="card-desc">{s['desc']}</p>
+            <div class="prices-container">
+                {render_price_box("Price", s['price'])}
+            </div>
+        </div>
+    </div>
+    """
+        for s in MENU_DATA["wraps_and_sandwiches"]["sandwiches"]
+    ]
+)
+
+wraps_sandwiches_html = f"""
+<div class="category-section" id="wraps-sandwiches">
+    <div class="section-header">
+        <span class="section-tag">Handcrafted & Rolled Fresh</span>
+        <h2 class="section-title">Tortilla Wraps & Sandwiches</h2>
+        <div class="section-divider">
+            <span class="divider-line"></span>
+            <i class="fa-solid fa-bread-slice"></i>
+            <span class="divider-line right"></span>
+        </div>
+    </div>
+    
+    <!-- SPECIAL WRAP SPOTLIGHT -->
+    <div class="feature-banner-card">
+        <div class="feature-banner-content">
+            <span class="card-badge gold" style="display:inline-block; width:fit-content; margin-bottom:1rem;">Tortilla Special</span>
+            <h3 class="card-title" style="font-size:2rem;">{wrap_data['title']}</h3>
+            <p class="card-desc">{wrap_data['desc']}</p>
+            <div style="font-size:0.8rem; font-weight:700; color:var(--gold); margin-bottom:0.5rem; text-transform:uppercase;">Choice of Artisan Drizzle:</div>
+            <div style="font-size:0.9rem; color:#fff; font-weight:600; margin-bottom:1.2rem;">{flavors_str}</div>
+            <div style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Customize with Add-ons:</div>
+            <div class="addon-pill-list">
+                {addons_html}
+            </div>
+            <div class="prices-container" style="margin-top:1.2rem;">
+                {render_price_box("Base Price", wrap_data['base_price'])}
+            </div>
+        </div>
+        <div>
+            <img src="{wrap_data['image']}" class="feature-banner-image" alt="Tortilla Wrap">
+        </div>
+    </div>
+
+    <div class="sub-category-title"><i class="fa-solid fa-layer-group" style="color:var(--gold); font-size:0.7rem;"></i> Artisanal Triple-Decker Sandwiches</div>
+    <div class="food-grid">
+        {sandwiches_cards}
+    </div>
+</div>
+"""
+
+# 3.5 Pastas Section
+pasta_cards = "".join(
+    [
+        f"""
+    <div class="food-card">
+        <div class="card-img-wrapper">
+            <span class="card-badge gold">{pasta['badge']}</span>
+            <img src="{pasta['image']}" alt="{pasta['name']}" loading="lazy">
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">{pasta['name']}</h3>
+            <p class="card-desc">{pasta['desc']}</p>
+            <div class="prices-container">
+                {render_price_box("Price", pasta['price'])}
+            </div>
+        </div>
+    </div>
+    """
+        for pasta in MENU_DATA["pastas"]
+    ]
+)
+
+pastas_section_html = f"""
+<div class="category-section" id="pastas">
+    <div class="section-header">
+        <span class="section-tag">Oven Baked Cheese & Savory Cream</span>
+        <h2 class="section-title">Italian Pastas</h2>
+        <div class="section-divider">
+            <span class="divider-line"></span>
+            <i class="fa-solid fa-bowl-food"></i>
+            <span class="divider-line right"></span>
+        </div>
+    </div>
+    
+    <div class="food-grid">
+        {pasta_cards}
+    </div>
+</div>
+"""
+
+# 3.6 Fried Chicken Section
+fried_chicken_cards = "".join(
+    [
+        f"""
+    <div class="food-card">
+        <div class="card-img-wrapper">
+            <span class="card-badge">Crisp & Juicy</span>
+            <img src="{item['image']}" alt="{item['name']}" loading="lazy">
+        </div>
+        <div class="card-body">
+            <div class="card-serving">{item['serving']}</div>
+            <h3 class="card-title">{item['name']}</h3>
+            <p class="card-desc">{item['desc']}</p>
+            <div class="prices-container">
+                {render_price_box("Price", item['price'])}
+            </div>
+        </div>
+    </div>
+    """
+        for item in MENU_DATA["fried_chicken"]
+    ]
+)
+
+fried_chicken_section_html = f"""
+<div class="category-section" id="fried-chicken">
+    <div class="section-header">
+        <span class="section-tag">Secret 11-Spice Recipe</span>
+        <h2 class="section-title">Southern Fried Chicken</h2>
+        <div class="section-divider">
+            <span class="divider-line"></span>
+            <i class="fa-solid fa-drumstick-bite"></i>
+            <span class="divider-line right"></span>
+        </div>
+    </div>
+    
+    <div class="food-grid">
+        {fried_chicken_cards}
+    </div>
+</div>
+"""
+
+# 3.7 Platters Section
+platters_cards = "".join(
+    [
+        f"""
+    <div class="platter-card">
+        <div class="card-img-wrapper" style="height:230px;">
+            <span class="card-badge gold">{platter['badge']}</span>
+            <img src="{platter['image']}" alt="{platter['name']}" loading="lazy">
+        </div>
+        <div class="card-body">
+            <h3 class="card-title" style="font-size:1.4rem;">{platter['name']}</h3>
+            <p class="card-desc">{platter['desc']}</p>
+            <div class="platter-specs">
+                <i class="fa-solid fa-box-open" style="margin-right:6px;"></i> {platter['includes']}
+            </div>
+            <div class="prices-container">
+                {render_price_box("Complete Deal Price", platter['price'])}
+            </div>
+        </div>
+    </div>
+    """
+        for platter in MENU_DATA["platters"]
+    ]
+)
+
+platters_section_html = f"""
+<div class="category-section" id="platters">
+    <div class="section-header">
+        <span class="section-tag">Value Sharing Feasts</span>
+        <h2 class="section-title">Fabbies Grand Platters</h2>
+        <div class="section-divider">
+            <span class="divider-line"></span>
+            <i class="fa-solid fa-utensils"></i>
+            <span class="divider-line right"></span>
+        </div>
+    </div>
+    
+    <div class="food-grid-wide">
+        {platters_cards}
+    </div>
+</div>
+"""
+
+# 3.8 Behari Rolls Section
+behari = MENU_DATA["behari_rolls"]
+behari_section_html = f"""
+<div class="category-section" id="behari-rolls">
+    <div class="section-header">
+        <span class="section-tag">The Town's Famous Roll</span>
+        <h2 class="section-title">Signature Behari Rolls</h2>
+        <div class="section-divider">
+            <span class="divider-line"></span>
+            <i class="fa-solid fa-fire"></i>
+            <span class="divider-line right"></span>
+        </div>
+    </div>
+    
+    <div class="feature-banner-card" style="border: 2px solid var(--gold);">
+        <div class="feature-banner-content">
+            <span class="card-badge" style="display:inline-block; width:fit-content; margin-bottom:1rem;">{behari['badge']}</span>
+            <div class="card-serving">{behari['serving']}</div>
+            <h3 class="card-title" style="font-size:2.2rem; color:var(--gold);">{behari['name']}</h3>
+            <p class="card-desc" style="font-size:1rem; line-height:1.7;">{behari['desc']}</p>
+            <div class="prices-container" style="margin-top:2rem;">
+                {render_price_box("Special Set Price (4 Pcs)", behari['price'])}
+            </div>
+        </div>
+        <div>
+            <img src="{behari['image']}" class="feature-banner-image" alt="Behari Rolls">
+        </div>
+    </div>
+</div>
+"""
+
+# 4. FOOTER & FLOATING ACTIONS
+footer_html = f"""
+<footer class="fabbies-footer">
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4>{b['name']}</h4>
+            <p style="color:var(--gold); font-weight:700; font-size:0.85rem; letter-spacing:1px;">{b['tagline']}</p>
+            <p>{b['description']}</p>
+            <div class="footer-socials">
+                <a href="{b['facebook_url']}" target="_blank" class="social-circle"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="{b['instagram_url']}" target="_blank" class="social-circle"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://wa.me/{b['whatsapp']}" target="_blank" class="social-circle"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+        </div>
+        
+        <div class="footer-col">
+            <h4>Location & Hours</h4>
+            <p><i class="fa-solid fa-location-dot" style="color:var(--gold); margin-right:8px;"></i> {b['location']}</p>
+            <p><i class="fa-solid fa-clock" style="color:var(--gold); margin-right:8px;"></i> {b['hours']}</p>
+            <p><i class="fa-solid fa-phone" style="color:var(--gold); margin-right:8px;"></i> {b['phone']}</p>
+        </div>
+        
+        <div class="footer-col">
+            <h4>Quick Order & Delivery</h4>
+            <p>Hot and fresh delivery straight to your doorstep within 35 to 45 minutes.</p>
+            <a href="https://wa.me/{b['whatsapp']}?text=Hi%20Fabbies!%20I%20would%20like%20to%20place%20an%20order." target="_blank" class="nav-pill" style="margin-top:10px; background:var(--gold); color:#101010; font-weight:800; border:none; padding:0.75rem 1.4rem;">
+                <i class="fa-brands fa-whatsapp" style="color:#101010; font-size:1rem;"></i> Order on WhatsApp
+            </a>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        &copy; {b['name']} Restaurant. All Rights Reserved. Crafted for food lovers everywhere.
+    </div>
+</footer>
+
+<!-- FLOATING ACTION BUTTONS -->
+<div class="floating-action-group">
+    <a href="https://wa.me/{b['whatsapp']}?text=Hi%20Fabbies,%20I%20want%20to%20order!" target="_blank" class="fab-btn whatsapp" title="Chat on WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+    <a href="#brand-home" class="fab-btn scrolltop" title="Scroll To Top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+</div>
+"""
+
+# ASSEMBLE FULL PAGE HTML
+full_page_content = f"""
+{hero_html}
+{nav_bar_html}
+<div class="menu-container">
+    {pizza_section_html}
+    {appetizers_section_html}
+    {burgers_section_html}
+    {wraps_sandwiches_html}
+    {pastas_section_html}
+    {fried_chicken_section_html}
+    {platters_section_html}
+    {behari_section_html}
+</div>
+{footer_html}
+"""
+
+# Render complete layout natively with Markdown
+st.markdown(full_page_content, unsafe_allow_html=True)

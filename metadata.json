@@ -1,0 +1,6 @@
+{
+  "name": "Fabbies - Premium Animated Restaurant Menu",
+  "description": "Premium animated storytelling menu and online ordering experience for FABBIES restaurant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
